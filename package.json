@@ -1,0 +1,24 @@
+{
+    "name": "red-project",
+    "version": "0.0.1",
+    "private": true,
+    "description": "A Node-RED Project",
+    "license": "ISC",
+    "author": "",
+    "type": "commonjs",
+    "main": "settings.js",
+    "directories": {
+        "lib": "lib"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "@flowfuse/node-red-dashboard": "~1.27.1",
+        "bootstrap": "^5.3.8",
+        "datatables.net-dt": "^2.3.4",
+        "mustache": "^4.2.0",
+        "node-red-contrib-file-template": "~1.1.5",
+        "node-red-node-ui-table": "~0.4.5"
+    }
+}

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <style>
+        #inputGroup-sizing-lg:hover{
+            background-color:burlywood;
+            transition: box-shadow 0.3s ease;
+            cursor: pointer;
+            box-shadow: 4px 4px 12px rgba(0,0,0,0.4);
+        };
+        .btn.btn-primary:focus
+        {
+            transition: box-shadow 0.3s ease;
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            border-radius: 3px;
+        }
+        
+    </style>
+    <script>
+        function createTask(params) {
+            
+        }
+        function handleCheck(chkbx, lbl) {
+            const temp_chkbx = document.getElementById(chkbx);
+            if (temp_chkbx.checked) {
+                lbl.textContent = "☑";
+            }
+            else{
+                lbl.textContent = "☐";
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Dropdown
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- NAVBAREND -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <form action="">
+                    <div class="input-group input-group-lg mt-5">
+                        <input type="text" class="form-control" placeholder="Big Man Charizard"/>
+                        <button class="btn btn-primary" type="reset" style="padding-left: 10px; padding-right: 10px; background-color: white;color: black;">Temizle</button>
+                        <button class="btn btn-primary" type="submit" style="padding-left: 30px; padding-right: 30px;">Ekle</button>
+                    </div>
+                </form> 
+                <div class="table-responsive mt-5 border">
+                    <table class="table table-striped table-hover border mb-0 ">
+                        <thead>
+                            <tr>
+                                <th>Task</th><th>Details... Details</th><th style="text-align: center;">Actions</th><th>Status</th>
+                            </tr>
+                        </thead>
+                            <tr>
+                                <td>example task1</td><td>date, due date, etc.</td>
+                                <td align="right">
+                                    <div class="btn-group text-right">
+                                        <button class="btn btn-outline-primary">Update</button>
+                                        <button class="btn btn-outline-secondary">Reminder</button>
+                                        <button class="btn btn-outline-warning">Delete</button>
+                                        <button class="btn btn-outline-dark">Delay</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="checkbox"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>example task2</td><td>date, due date, etc.</td>
+                                <td align="right">
+                                    <div class="btn-group text-right">
+                                        <button class="btn btn-outline-primary">Update</button>
+                                        <button class="btn btn-outline-secondary">Reminder</button>
+                                        <button class="btn btn-outline-warning">Delete</button>
+                                        <button class="btn btn-outline-dark">Delay</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="checkbox"/>
+                                </td >
+                            </tr>
+                            <tr>
+                                <td>example task3</td><td>date, due date, etc.</td>
+                                <td align="right">
+                                    <div class="btn-group text-right">
+                                        <button class="btn btn-outline-primary">Update</button>
+                                        <button class="btn btn-outline-secondary">Reminder</button>
+                                        <button class="btn btn-outline-warning">Delete</button>
+                                        <button class="btn btn-outline-dark">Delay</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="checkbox" class="btn-check" id="btncheck1" onchange="handleCheck(this, label1)"/>
+                                    <label for="btncheck1" class="btn btn-outline-primary border-0" id="label1" onchange="handleCheck(this, label1)">☐</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="admin_panel.html">example task4</a></td><td>date, due date, etc.</td>
+                                <td align="right">
+                                    <div class="btn-group text-right">
+                                        <button class="btn btn-outline-primary">Update</button>
+                                        <button class="btn btn-outline-secondary">Reminder</button>
+                                        <button class="btn btn-outline-warning">Delete</button>
+                                        <button class="btn btn-outline-dark">Delay</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="checkbox" class="btn-check" id="btncheck1" onchange="handleCheck(this, label1)"/>
+                                    <label for="btncheck1" class="btn btn-outline-primary border-0" id="label1" onchange="handleCheck(this, label1)">☐</label>
+                                </td>
+                            </tr>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script> src="/js/bootsrap.bundle.min.js"</script>
+    <!--<p>Big Man Blastoise</p>-->
+</body>
+</html>
+
+<!--
+Button 110 {
+	width: 83px;
+	height: 38px;
+	padding: 0px 10px;
+	background: #0178FD;
+	border: 1px solid #0178FD;
+	border-radius: 4px;
+	color: #FFFFFF;
+	font-family: "Helvetica";
+	font-weight: 400;
+	font-size: 16px;
+	text-align: center;
+}
+-->
