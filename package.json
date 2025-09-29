@@ -18,6 +18,7 @@
         "bootstrap": "^5.3.8",
         "datatables.net-dt": "^2.3.4",
         "mustache": "^4.2.0",
+        "node-red-contrib-bcrypt": "~0.1.6",
         "node-red-contrib-file-template": "~1.1.5",
         "node-red-node-ui-table": "~0.4.5"
     }

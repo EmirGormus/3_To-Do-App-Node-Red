@@ -27,7 +27,7 @@
         "id": "a9fdb53338e43b97",
         "type": "http in",
         "z": "d30f86340f610285",
-        "name": "",
+        "name": "Main UI",
         "url": "/",
         "method": "get",
         "upload": false,
@@ -51,25 +51,6 @@
         "x": 670,
         "y": 120,
         "wires": []
-    },
-    {
-        "id": "f3bfa89627bcb047",
-        "type": "template",
-        "z": "d30f86340f610285",
-        "name": "",
-        "field": "payload",
-        "fieldType": "msg",
-        "format": "html",
-        "syntax": "mustache",
-        "template": "<!DOCTYPE html>\n<html lang=\"tr\">\n\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>To-Do List</title>\n    <link rel=\"icon\" type=\"image/x-icon\" href=\"./img/pokeball.png\">\n    <link rel=\"stylesheet\" href=\"./css/bootstrap.min.css\">\n    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js\"></script>\n    <!-- <script src=\"https://unpkg.com/mustache@latest\"></script> -->\n    <script src=\"./js/mustache.min.js\"></script>\n    <style>\n        #inputGroup-sizing-lg:hover {\n            background-color: burlywood;\n            transition: box-shadow 0.3s ease;\n            cursor: pointer;\n            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.4);\n        }\n\n        ;\n\n        .btn.btn-primary:focus {\n            transition: box-shadow 0.3s ease;\n            border-color: #86b7fe;\n            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);\n            border-radius: 3px;\n        }\n    </style>\n    <script>\n        function createTask(params) {\n            \n        }\n        function handleCheck(chkbx, lbl) {\n            const temp_chkbx = document.getElementById(chkbx);\n            if (temp_chkbx.checked) {\n                lbl.textContent = \"☑\";\n            }\n            else{\n                lbl.textContent = \"☐\";\n            }\n        }\n    </script>\n</head>\n\n<body>\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\"col-md-8 offset-md-2\">\n                {{#error}}\n                <div class=\"alert alert-danger mt-5\">\n                    <h4>{{message}}</h4>\n                </div>\n                {{/error}}\n                <!-- {{#message}}<p class=\"text text-danger\">{{.}}</p>{{/message}} -->\n                <form action=\"/add\" method=\"POST\">\n                    <div class=\"input-group input-group-lg mt-5\">\n                        <input required type=\"text\" name=\"name\" class=\"form-control {{#error}} border-danger {{/error}}\" placeholder=\"Big Man Charizard\"/>\n                        <button class=\"btn btn-primary\" type=\"reset\" style=\"padding-left: 10px; padding-right: 10px; background-color: white;color: black;\">Temizle</button>\n                        <button class=\"btn btn-primary\" type=\"submit\" style=\"padding-left: 30px; padding-right: 30px;\">Ekle</button>\n                    </div>\n                </form>\n                <div class=\"table-responsive mt-5 border\">\n                    <table class=\"table table-striped table-hover border mb-0 \">\n                        <thead>\n                            <tr>\n                                <th>Task</th>\n                                <th>Details... Details</th>\n                                <th style=\"text-align: center;\">Actions</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            {{#payload}}\n                                <tr>\n                                    <td>{{name}}</td>\n                                    <td>date, due date, etc.</td>\n                                    <td align=\"right\">\n                                        \n                                        <div class=\"btn-group text-right\">\n                                            <form method=\"POST\">\n                                                <input type=\"hidden\" name=\"id\" value=\"{{id}}\"  />\n                                            {{#done}}\n                                                <button type=\"submit\" class=\"btn btn-outline-dark\">Mark as incomplete</button>\n                                            {{/done}}\n                                            {{^done}}\n                                                <button type=\"submit\" class=\"btn btn-outline-primary\">Update</button>\n                                                <button type=\"submit\" class=\"btn btn-outline-secondary\">Reminder</button>\n                                                <button type=\"submit\" class=\"btn btn-outline-dark\">Delay</button>\n                                                <button type=\"submit\" class=\"btn btn-outline-dark\">complete</button>\n                                            {{/done}}\n                                            <button type=\"submit\" formaction=\"/deleteTask\" class=\"btn btn-outline-warning\">Delete</button>\n                                            </form>\n                                        </div>\n                                    </td>\n                                </tr>\n                            {{/payload}}\n                            {{^payload}}\n                                <tr>\n                                    <td class=\"text-muted\" colspan=\"3\">Henüz Task yok</td>\n                                </tr>\n                            {{/payload}}\n                        </tbody>\n                    </table>\n                </div>\n            </div>\n        </div>\n    </div>\n    <script>\n        src=\"/js/bootsrap.bundle.min.js\"\n    </script>\n    <!--<p>Big Man Blastoise</p>-->\n</body>\n\n</html>\n\n<!--\nButton 110 {\n\twidth: 83px;\n\theight: 38px;\n\tpadding: 0px 10px;\n\tbackground: #0178FD;\n\tborder: 1px solid #0178FD;\n\tborder-radius: 4px;\n\tcolor: #FFFFFF;\n\tfont-family: \"Helvetica\";\n\tfont-weight: 400;\n\tfont-size: 16px;\n\ttext-align: center;\n}\n-->",
-        "output": "str",
-        "x": 460,
-        "y": 120,
-        "wires": [
-            [
-                "6d306d8c46512ff1"
-            ]
-        ]
     },
     {
         "id": "3abf7d4bfdd8f625",
@@ -121,7 +102,7 @@
         "type": "function",
         "z": "d30f86340f610285",
         "name": "db.todo.find()",
-        "func": "const DB = global.get(\"DB\")\nmsg.payload = DB.todo;\nreturn msg;",
+        "func": "const DB = global.get(\"DB\")\nmsg.payload = DB.todo;\nmsg.payload_json = JSON.stringify(msg.payload);\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -132,95 +113,8 @@
         "y": 120,
         "wires": [
             [
-                "f3bfa89627bcb047"
-            ]
-        ]
-    },
-    {
-        "id": "49b070ec7b4905d6",
-        "type": "http in",
-        "z": "d30f86340f610285",
-        "name": "addTask",
-        "url": "/add",
-        "method": "post",
-        "upload": false,
-        "skipBodyParsing": false,
-        "swaggerDoc": "",
-        "x": 80,
-        "y": 220,
-        "wires": [
-            [
-                "b477b2bcf037fc13"
-            ]
-        ]
-    },
-    {
-        "id": "13c8d762c253c09e",
-        "type": "http response",
-        "z": "d30f86340f610285",
-        "name": "",
-        "statusCode": "302",
-        "headers": {
-            "location": "/"
-        },
-        "x": 600,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "9738fbf514136ba6",
-        "type": "function",
-        "z": "d30f86340f610285",
-        "name": "db.todo.insert()",
-        "func": "const DB = global.get(\"DB\")\nlet todo = DB.todo\n\nconst now = new Date().getTime();\ntodo.push({\n    id: now,\n    name:msg.payload.name,\n    done:false,\n    stamp:{\n        CreatedAt:now,\n        ip:msg.req.ip,\n        username:\"\",\n        email:\"\",\n    }\n})\nDB.todo = todo\nglobal.set(\"DB\",DB)\n\n/**\n * ToDo DB Şema\n * id :num\n * name :\"\"\n * done:true|false\n * stamp: {\n    *  CreatedAt: sometime,\n    *  ip: IP,\n    *  user:\"\",\n    *  email: \"\",\n * \n * }\n*/\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 440,
-        "y": 220,
-        "wires": [
-            [
-                "13c8d762c253c09e"
-            ]
-        ]
-    },
-    {
-        "id": "b477b2bcf037fc13",
-        "type": "function",
-        "z": "d30f86340f610285",
-        "name": "validation",
-        "func": "if(!msg.payload.name){\n    node.error(\"You cannot add a nameless task.\", msg);\n    return;\n}\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 260,
-        "y": 220,
-        "wires": [
-            [
-                "9738fbf514136ba6"
-            ]
-        ]
-    },
-    {
-        "id": "eab5ee6ebd13aec8",
-        "type": "catch",
-        "z": "d30f86340f610285",
-        "name": "",
-        "scope": [
-            "b477b2bcf037fc13"
-        ],
-        "uncaught": false,
-        "x": 250,
-        "y": 280,
-        "wires": [
-            [
-                "863b0a0285ecdc3c"
+                "8977c43faa8ac5b1",
+                "7e728c5fe9fd3323"
             ]
         ]
     },
@@ -234,7 +128,16 @@
             "e9612ac162761d79",
             "5a9e7156ac61d720",
             "120bde15a98516bb",
-            "b4551f1736463831"
+            "b4551f1736463831",
+            "adaa3a2c6da233fc",
+            "42535bcf00b6ca99",
+            "36fab97027d40c64",
+            "091d45602778ce5e",
+            "a08264d85944eadd",
+            "38c8786949af7aca",
+            "2dd20b4d491506a2",
+            "f0a1fb809bc146a2",
+            "6253d6033a0d4bf4"
         ],
         "x": 165,
         "y": 80,
@@ -245,96 +148,43 @@
         ]
     },
     {
-        "id": "863b0a0285ecdc3c",
-        "type": "link out",
-        "z": "d30f86340f610285",
-        "name": "link out 1",
-        "mode": "link",
-        "links": [
-            "6174979e5eaf9458"
-        ],
-        "x": 405,
-        "y": 280,
-        "wires": []
-    },
-    {
-        "id": "f6eee42979577bd1",
+        "id": "de3c2916f6f27cdd",
         "type": "http in",
         "z": "d30f86340f610285",
-        "name": "deleteTask",
-        "url": "/deleteTask",
+        "name": "operation",
+        "url": "/operation/:type",
         "method": "post",
         "upload": false,
         "skipBodyParsing": false,
         "swaggerDoc": "",
-        "x": 80,
-        "y": 440,
+        "x": 120,
+        "y": 220,
         "wires": [
             [
-                "f9e390d75f519b8b"
+                "b487e39626ca3642"
             ]
         ]
     },
     {
-        "id": "923f85e557a7adcf",
-        "type": "function",
-        "z": "d30f86340f610285",
-        "name": "db.todo.delete()",
-        "func": "const DB = global.get(\"DB\")\nlet todo = DB.todo\n\nconst index = todo.findIndex(x => x.id == msg.payload.id)\n\nif(!~index){\n    msg.error={\n        message:\"No matching task found with the ID.\"\n    }\n    return [null,msg]\n}\n\ntodo.splice(index,1)\n\nDB.todo = todo\n\nglobal.set(\"DB\",DB)\n\n/**\n * ToDo DB Şema\n * id :num\n * name :\"\"\n * done:true|false\n * stamp: {\n    *  CreatedAt: sometime,\n    *  ip: IP,\n    *  user:\"\",\n    *  email: \"\",\n * \n * }\n*/\nreturn msg;",
-        "outputs": 2,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 460,
-        "y": 420,
-        "wires": [
-            [
-                "c6eb080e57c76c71"
-            ],
-            [
-                "e9612ac162761d79"
-            ]
-        ],
-        "outputLabels": [
-            "Success",
-            "Error"
-        ]
-    },
-    {
-        "id": "c6eb080e57c76c71",
-        "type": "http response",
-        "z": "d30f86340f610285",
-        "name": "",
-        "statusCode": "302",
-        "headers": {
-            "location": "/"
-        },
-        "x": 620,
-        "y": 420,
-        "wires": []
-    },
-    {
-        "id": "f9e390d75f519b8b",
+        "id": "b487e39626ca3642",
         "type": "function",
         "z": "d30f86340f610285",
         "name": "validation",
-        "func": "if(!msg.payload.id){\n    msg.error = {\n        message:\"The task you wanted to delete must have an ID.\"\n    }\n    return [null, msg]\n}\nreturn msg;",
+        "func": "const typeLookup={\n    deleteTask : {\n        title: \"delete\",\n        rqA: \"id\"\n    },\n    complete : {\n        title: \"complete\",\n        rqA: \"id\"\n    },\n    incomplete : {\n        title: \"incomplete\",\n        rqA: \"id\"\n    }, \n    add : {\n        title: \"add\",\n        rqA: \"name\"\n    }\n}\n\nif(!Object.keys(typeLookup).includes(msg.req.params.type)){\n    msg.error = {\n        message: `Request Type Error: ${msg.req.params.type}. \\n Unsupported request type. `\n    }\n    return [null,msg]\n}\n\nif(!msg.payload[typeLookup[msg.req.params.type].rqA]){\n    msg.error = {\n        message: `The task you wanted to ${typeLookup[msg.req.params.type].title} must have an/a ${typeLookup[msg.req.params.type].rqA}.`\n    }\n    return [null, msg]\n}\nreturn msg;",
         "outputs": 2,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 260,
-        "y": 440,
+        "x": 280,
+        "y": 220,
         "wires": [
             [
-                "923f85e557a7adcf"
+                "edf78bca85b5d71b"
             ],
             [
-                "5a9e7156ac61d720"
+                "38c8786949af7aca"
             ]
         ],
         "outputLabels": [
@@ -343,50 +193,288 @@
         ]
     },
     {
-        "id": "e2cd8e5cc2927272",
-        "type": "comment",
+        "id": "edf78bca85b5d71b",
+        "type": "function",
         "z": "d30f86340f610285",
-        "name": "Spared",
-        "info": "",
-        "x": 70,
-        "y": 520,
-        "wires": []
-    },
-    {
-        "id": "e9612ac162761d79",
-        "type": "link out",
-        "z": "d30f86340f610285",
-        "name": "link out 2",
-        "mode": "link",
-        "links": [
-            "6174979e5eaf9458"
+        "name": "db.todo.handler()",
+        "func": "const DB = global.get(\"DB\")\nlet todo = DB.todo\n\nconst date = new Date();\nconst now = date.getTime();\nfunction updateTaskStamp(obj){\n    obj.stamp = {\n        CreatedAt: now,\n        ip: msg.req.ip,\n        username: \"\",\n        email: \"\",\n    }\n    obj.date = date.toLocaleDateString()\n    obj.time = date.toLocaleTimeString()\n}\n\nif(msg.req.params.type === 'add'){\n    todo.push({\n        id: now,\n        name: msg.payload.name,\n        done: false,\n        stamp: {\n            CreatedAt: now,\n            ip: msg.req.ip,\n            username: \"\",\n            email: \"\",\n        },\n        date : date.toLocaleDateString(),\n        time : date.toLocaleTimeString()\n\n        \n    })\n}\nelse{\n    const index = todo.findIndex(x => x.id == msg.payload.id)\n    if (!~index) {\n        msg.error = {\n            message: \"No matching task found with the ID.\"\n        }\n        return [null, msg]\n    }\n    switch (msg.req.params.type) {\n        case \"deleteTask\":\n            todo.splice(index, 1)\n            break;\n        case \"complete\":\n            todo[index].done = true;\n            updateTaskStamp(todo[index]);\n            break;\n        case \"incomplete\":\n            todo[index].done = false;\n            updateTaskStamp(todo[index]);\n            break;\n        default:\n    }\n}\nDB.todo = todo\n\nglobal.set(\"DB\",DB)\n\nreturn msg;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 180,
+        "wires": [
+            [
+                "35f6cf6ab32890d3",
+                "07e06e9da6cadaa1"
+            ],
+            [
+                "a08264d85944eadd"
+            ]
         ],
-        "x": 575,
-        "y": 480,
-        "wires": []
+        "outputLabels": [
+            "Success",
+            "Error"
+        ]
     },
     {
-        "id": "5a9e7156ac61d720",
-        "type": "link out",
-        "z": "d30f86340f610285",
-        "name": "link out 3",
-        "mode": "link",
-        "links": [
-            "6174979e5eaf9458"
-        ],
-        "x": 365,
-        "y": 480,
-        "wires": []
-    },
-    {
-        "id": "0b7730b29503a68e",
+        "id": "35f6cf6ab32890d3",
         "type": "http response",
-        "z": "16b5753bd4d1f0a0",
+        "z": "d30f86340f610285",
+        "name": "",
+        "statusCode": "302",
+        "headers": {
+            "location": "/"
+        },
+        "x": 700,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "a08264d85944eadd",
+        "type": "link out",
+        "z": "d30f86340f610285",
+        "name": "link out 13",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 615,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "38c8786949af7aca",
+        "type": "link out",
+        "z": "d30f86340f610285",
+        "name": "link out 14",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 405,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "8d7a223ef9bb4aa5",
+        "type": "http in",
+        "z": "d30f86340f610285",
+        "name": "comingsoon",
+        "url": "/comingsoon",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "6253d6033a0d4bf4"
+            ]
+        ]
+    },
+    {
+        "id": "f17a9b478b405da7",
+        "type": "http in",
+        "z": "d30f86340f610285",
+        "name": "testers",
+        "url": "/test",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 580,
+        "wires": [
+            [
+                "9d35a632a26c78bd"
+            ]
+        ]
+    },
+    {
+        "id": "2b66a03f204f2260",
+        "type": "http response",
+        "z": "d30f86340f610285",
         "name": "",
         "statusCode": "",
         "headers": {},
+        "x": 650,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "9d35a632a26c78bd",
+        "type": "function",
+        "z": "d30f86340f610285",
+        "name": "db.todo.find()",
+        "func": "const DB = global.get(\"DB\")\nmsg.payload = DB.todo;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 580,
+        "wires": [
+            [
+                "d92ddcf49d8e662c"
+            ]
+        ]
+    },
+    {
+        "id": "091730e78cd907e3",
+        "type": "http in",
+        "z": "d30f86340f610285",
+        "name": "update",
+        "url": "/update",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 380,
+        "wires": [
+            [
+                "63e6dd09c3c24672"
+            ]
+        ]
+    },
+    {
+        "id": "7dd44a289f74847e",
+        "type": "http response",
+        "z": "d30f86340f610285",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 490,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "63e6dd09c3c24672",
+        "type": "template",
+        "z": "d30f86340f610285",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "This is the payload: {{payload}} !",
+        "output": "str",
+        "x": 300,
+        "y": 380,
+        "wires": [
+            [
+                "7dd44a289f74847e"
+            ]
+        ]
+    },
+    {
+        "id": "6253d6033a0d4bf4",
+        "type": "link out",
+        "z": "d30f86340f610285",
+        "name": "link out 17",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 255,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "d92ddcf49d8e662c",
+        "type": "template",
+        "z": "d30f86340f610285",
+        "name": "testTemplate",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "html",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html lang=\"tr\">\n\n<head>\n    <meta charset=\"UTF-8\">\n    <link rel=\"icon\" type=\"image/x-icon\" href=\"/img/pokeball.png\">\n    <link rel=\"stylesheet\" href=\"/css/mycss.css\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>To-Do List</title>\n    <!-- Using CDN for bootstrap for this example to work standalone -->\n    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\n    <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css\">\n    <!-- SurveyJS -->\n    <link href=\"https://unpkg.com/survey-core/survey-core.min.css\" type=\"text/css\" rel=\"stylesheet\">\n    <script type=\"text/javascript\" src=\"https://unpkg.com/survey-core/survey.core.min.js\"></script>\n    <script type=\"text/javascript\" src=\"https://unpkg.com/survey-js-ui/survey-js-ui.min.js\"></script>\n    <!-- ... -->\n    <style>\n        .dark-hover{\n            background-color:#212529;\n            color:white;\n        }\n        .dark-hover:hover{\n            background-color:white;\n            color:black;\n        }\n\n        // modal update form\n\n\n    </style>\n</head>\n\n<body>\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\" col col-md-2 offset-md-10\">\n                <button class=\"btn btn-outline-dark mt-5\" id=\"theme-toggle-btn\" style=\"position:fixed; z-index:55;border:0;\"></button>\n            </div>\n            <div class=\"col-md-8 offset-md-2\"\">\n                <form action=\"/operation/add\" method=\"POST\">\n                    <div class=\"input-group input-group-lg mt-5\">\n                        <input required type=\"text\" name=\"name\" class=\"form-control\" placeholder=\"Big Man Charizard\" />\n                        <button class=\"btn btn-outline-secondary\" type=\"reset\">Temizle</button>\n                        <button class=\"btn btn-primary\" type=\"submit\">Ekle</button>\n                    </div>\n                </form>\n                <div class=\"table-responsive mt-5 border rounded\">\n                    <table class=\"table table-striped table-hover border mb-0\" id=\"task-table\">\n                        <thead>\n                            <tr>\n                                <th>Task</th>\n                                <th>Details</th>\n                                <th style=\"text-align: right;\">Actions</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <!-- \n                                NODE-RED WILL RENDER THE TABLE ROWS HERE \n                                using the Mustache.js template below.\n                            -->\n                            {{#payload}}\n                            <tr>\n                                <td class=\"{{#done}}text-decoration-line-through{{/done}}\">{{name}}</td>\n                                <td><span class=\"badge bg-secondary\"><i class=\"bi bi-calendar2-week\"></i> {{date}},{{time}}</span>\n                                </td>\n                                <td align=\"right\">\n                                    <!-- \n                                            This is the trigger button.\n                                            - It has a CLASS, not an ID.\n                                            - It stores the task's data.\n                                        -->\n                                    <button\n                                            class=\"btn btn-sm btn-outline-secondary options-popover-btn\"\n                                            data-id=\"{{id}}\"\n                                            data-done=\"{{done}}\">\n                                            <i class=\"bi bi-three-dots-vertical\"></i>\n                                        </button>\n                                </td>\n                            </tr>\n                            {{/payload}}\n                            {{^payload}}\n                            <tr>\n                                <td class=\"text-muted\" colspan=\"3\">Henüz Task yok</td>\n                            </tr>\n                            {{/payload}}\n                        </tbody>\n                    </table>\n                </div>\n                <!--  -->\n            </div>\n        </div>\n    </div>\n    <div class=\"modal fade\" id=\"staticBackdrop\" data-bs-backdrop=\"static\" data-bs-keyboard=\"false\" tabindex=\"-1\" aria-labelledby=\"staticBackdropLabel\" aria-hidden=\"true\">\n        <div class=\"modal-dialog modal-dialog-centered modal-dialog-scrollable\">\n            <div class=\"modal-content\">\n                <div class=\"modal-header\">\n                    <h1 class=\"modal-title fs-5\" id=\"staticBackdropLabel\">Modal title</h1>\n                    <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n                </div>\n                <div class=\"modal-body\">\n                    <div id=\"surveyContainer\"></div>\n                </div>\n                <div class=\"modal-footer\">\n                    <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Close</button>\n                    <button type=\"button\" class=\"btn btn-primary\">Understood</button>\n                </div>\n            </div>\n        </div>\n    </div>\n    </div>\n\n    <!-- \n      THE TEMPLATE FOR THE POPOVER\n      This holds the HTML for the popover's content. It's invisible on the page\n      but the script below will use it.\n    -->\n    <template id=\"popover-template\">\n        <div class=\"btn-group\">\n            <form method=\"POST\" style=\"display: contents;\">\n                <!-- The script will put the correct item ID here -->\n                <input type=\"hidden\" name=\"id\" value=\"\" class=\"popover-id-input\" />\n\n                <!-- Group of buttons to show when the task is DONE -->\n                <div class=\"done-buttons\" style=\"display: contents;\">\n                    <button type=\"submit\" formaction=\"/operation/incomplete\" class=\"btn btn-outline-warning\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Mark As Incomplete\"><i class=\"bi bi-x-square\"></i></button>\n                </div>\n\n                <!-- Group of buttons to show when the task is NOT DONE -->\n                <div class=\"not-done-buttons\" style=\"display: contents;\">\n                    <button type=\"button\" formaction=\"\" class=\"btn btn-outline-primary btn-update\" name=\"id\" value=\"\" onclick=\"update_Task(this.value)\" data-bs-placement=\"top\" data-bs-title=\"Update\" data-bs-toggle=\"modal\" data-bs-target=\"#staticBackdrop\"><i class=\"bi bi-pencil\"></i></button>\n                    <button type=\"button\" formaction=\"\" class=\"btn btn-outline-secondary\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Set Reminder\"><i class=\"bi bi-bell\"></i></button>\n                    <button type=\"button\" formaction=\"\" class=\"btn btn-outline-info\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Delay\"><i class=\"bi bi-arrow-clockwise\"></i></button>\n                    <button type=\"submit\" formaction=\"/operation/complete\" class=\"btn btn-outline-success\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Complete Task\"><i class=\"bi bi-check2-square\"></i></button>\n                </div>\n\n                <!-- This button is always shown inside the popover -->\n                <button type=\"submit\" formaction=\"/operation/deleteTask\" class=\"btn btn-outline-danger\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Delete Task\"><i class=\"bi bi-trash3\"></i></button>\n            </form>\n        </div>\n    </template>\n\n    <!-- JS Libraries -->\n    <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js\"></script>\n\n    <script>\n        // Find the button by its ID\n            const modalTooltipButtons = document.querySelectorAll('.btn-update');\n            \n            modalTooltipButtons.forEach(modalButton ()=>{\n                const tooltip = new bootstrap.Tooltip(modalButton);\n            });\n    </script>\n\n    <script>\n        // This script will run in the user's browser AFTER Node-RED has rendered the page.\n        document.addEventListener('DOMContentLoaded', () => {\n            \n            // Get the HTML template for the popover's content\n            const popoverTemplate = document.getElementById('popover-template');\n\n            // Find ALL the buttons that need a popover (which were created by Node-RED)\n            const popoverTriggerList = document.querySelectorAll('.options-popover-btn');\n\n            // Loop through each trigger button\n            popoverTriggerList.forEach(popoverTriggerEl => {\n                \n                // Get the unique data from the button's data-* attributes\n                const itemId = popoverTriggerEl.dataset.id;\n                const isDone = popoverTriggerEl.dataset.done === 'true';\n\n                // Initialize the Bootstrap Popover for this specific button\n                const popover = new bootstrap.Popover(popoverTriggerEl, {\n                    html: true,\n                    title: 'Options',\n                    sanitize: false,\n                    // *** THE FIX IS HERE ***\n                    // Use a function for the content. This function runs EVERY TIME the popover is opened.\n                    content: function () {\n                        // B. Create a FRESH copy of the template's content\n                        const contentElement = popoverTemplate.content.cloneNode(true);\n                        \n                        // C. Modify the copied content\n                        contentElement.querySelector('.popover-id-input').value = itemId;\n                        let updatebtn = contentElement.querySelector('.btn-update');\n                        updatebtn.value = itemId;\n                        const tooltip = new bootstrap.Tooltip(updatebtn);\n\n\n                        // Show or hide the correct set of buttons based on the 'done' status\n                        if (isDone) {\n                            contentElement.querySelector('.not-done-buttons').remove();\n                        } else {\n                            contentElement.querySelector('.done-buttons').remove();\n                        }\n\n                        // D. Return the freshly prepared HTML element for Bootstrap to use\n                        return contentElement;\n                    }\n                });\n                \n\n                // E. Initialize nested tooltips after the popover is shown\n                popoverTriggerEl.addEventListener('shown.bs.popover', () => {\n                    const popoverId = popoverTriggerEl.getAttribute('aria-describedby');\n                    if (popoverId) {\n                        const popoverBody = document.getElementById(popoverId).querySelector('.popover-body');\n                        if (popoverBody) {\n                            const tooltipTriggersInPopover = popoverBody.querySelectorAll('[data-bs-toggle=\"tooltip\"]');\n                            [...tooltipTriggersInPopover].map(tooltipEl => new bootstrap.Tooltip(tooltipEl));\n                        }\n                    }\n                });\n            });\n\n            // Initialize any other tooltips on the page\n            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle=\"tooltip\"]');\n            [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));\n        });\n    </script>\n\n    <!-- updateHandler -->\n    <script>\n        \n        function update_Task(num){\n            console.log(num);\n            const info = {\n                id : num\n            }\n            console.log(\"info object\");\n            console.log(info);\n            console.log(\"id\");\n            console.log(info.id);\n            const modalupdate = document.getElementById('staticBackdrop');\n            modalupdate.setAttribute('value', num);\n            \n\n        };\n        \n    </script>\n\n    <!-- Dark Mode Light Mode -->\n    <script>\n        const themeToggleButton = document.getElementById('theme-toggle-btn');\n        const htmlElement = document.documentElement; // Gets the <html> element\n\n        // --- PART A: APPLY SAVED THEME ON PAGE LOAD ---\n\n        // This self-executing function applies the theme immediately.\n        (() => {\n            const savedTheme = localStorage.getItem('theme') || 'light';\n            themeToggleButton.innerHTML = savedTheme  === 'dark' ? '<i class=\"bi bi-moon-fill\"></i>' : '<i class=\"bi bi-brightness-high-fill\"></i>'\n            htmlElement.setAttribute('data-bs-theme', savedTheme);\n        })();\n\n\n        // --- PART B: HANDLE THE BUTTON CLICK ---\n        \n        themeToggleButton.addEventListener('click', () => {\n            // Check the current theme and toggle it\n            const currentTheme = htmlElement.getAttribute('data-bs-theme');\n            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';\n\n            // Set the new theme on the <html> element\n            htmlElement.setAttribute('data-bs-theme', newTheme);\n            if(newTheme ==='dark'){\n                themeToggleButton.innerHTML = '<i class=\"bi bi-moon-fill\"></i>';\n                themeToggleButton.classList.add('dark-hover');\n            }else{\n                themeToggleButton.classList.remove('dark-hover');\n                themeToggleButton.innerHTML = '<i class=\"bi bi-brightness-high-fill\"></i>'\n            }\n            \n            \n            // Save the new theme to localStorage\n            localStorage.setItem('theme', newTheme);\n        });\n    </script>\n    \n    <script>\n\n\n    const surveyJson = {\n    pages: [{\n        name: \"PersonalDetails\",\n        elements: [{\n        type: \"text\",\n        name: \"FirstName\",\n        title: \"Enter your first name:\"\n        }, {\n        type: \"text\",\n        name: \"LastName\",\n        title: \"Enter your last name:\"\n        }, {\n        type: \"panel\",\n        name: \"Contacts\",\n        state: \"collapsed\",\n        title: \"Contacts (optional)\",\n        elements: [{\n            type: \"text\",\n            name: \"Telegram\",\n            title: \"Telegram:\"\n        }, {\n            type: \"text\",\n            name: \"GitHub\",\n            title: \"GitHub username:\"\n        }]\n        }]\n    }]\n    };\n\n    const survey = new Survey.Model(surveyJson);\n    survey.focusFirstQuestionAutomatic = false;\n\n    document.addEventListener(\"DOMContentLoaded\", function() {\n    survey.render(document.getElementById(\"surveyContainer\"));\n    });\n\n    </script>\n\n</body>\n\n</html>",
+        "output": "str",
         "x": 470,
+        "y": 580,
+        "wires": [
+            [
+                "2b66a03f204f2260"
+            ]
+        ]
+    },
+    {
+        "id": "07e06e9da6cadaa1",
+        "type": "debug",
+        "z": "d30f86340f610285",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "487743e244d05892",
+        "type": "debug",
+        "z": "d30f86340f610285",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "8977c43faa8ac5b1",
+        "type": "template",
+        "z": "d30f86340f610285",
+        "name": "MainTemplate",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "html",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html lang=\"tr\">\n\n<head>\n    <meta charset=\"UTF-8\">\n    <link rel=\"icon\" type=\"image/x-icon\" href=\"/img/pokeball.png\">\n    <link rel=\"stylesheet\" href=\"/css/mycss.css\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>To-Do List</title>\n    <!-- Using CDN for bootstrap for this example to work standalone -->\n    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\n    <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css\">\n    <!-- SurveyJS -->\n    <link href=\"https://unpkg.com/survey-core/survey-core.min.css\" type=\"text/css\" rel=\"stylesheet\">\n    <script type=\"text/javascript\" src=\"https://unpkg.com/survey-core/survey.core.min.js\"></script>\n    <script type=\"text/javascript\" src=\"https://unpkg.com/survey-js-ui/survey-js-ui.min.js\"></script>\n    <!-- ... -->\n    <style>\n        .dark-hover{\n            background-color:#212529;\n            color:white;\n        }\n        .dark-hover:hover{\n            background-color:white;\n            color:black;\n        }\n    </style>\n    <script>\n        const taskDataPayload = JSON.parse('{{{payload_json}}}');\n    </script>\n</head>\n\n<body>\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\" col col-md-2 offset-md-10\">\n                <button class=\"btn btn-outline-dark mt-5\" id=\"theme-toggle-btn\" style=\"position:fixed; z-index:55;border:0;\"></button>\n            </div>\n            <div class=\"col-md-8 offset-md-2\"\">\n                <form action=\"/operation/add\" method=\"POST\">\n                    <div class=\"input-group input-group-lg mt-5\">\n                        <input required type=\"text\" name=\"name\" class=\"form-control\" placeholder=\"Big Man Charizard\" />\n                        <button class=\"btn btn-outline-secondary\" type=\"reset\">Temizle</button>\n                        <button class=\"btn btn-primary\" type=\"submit\">Ekle</button>\n                    </div>\n                </form>\n                <div class=\"table-responsive mt-5 border rounded\">\n                    <table class=\"table table-striped table-hover border mb-0\" id=\"task-table\">\n                        <thead>\n                            <tr>\n                                <th>Task</th>\n                                <th>Details</th>\n                                <th style=\"text-align: right;\">Actions</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <!-- \n                                NODE-RED WILL RENDER THE TABLE ROWS HERE \n                                using the Mustache.js template below.\n                            -->\n                            {{#payload}}\n                            <tr>\n                                <td class=\"{{#done}}text-decoration-line-through{{/done}}\">{{name}}</td>\n                                <td><span class=\"badge bg-secondary\"><i class=\"bi bi-calendar2-week\"></i> {{date}},{{time}}</span>\n                                </td>\n                                <td align=\"right\">\n                                    <!-- \n                                            This is the trigger button.\n                                            - It has a CLASS, not an ID.\n                                            - It stores the task's data.\n                                        -->\n                                    <button\n                                            class=\"btn btn-sm btn-outline-secondary options-popover-btn\"\n                                            data-id=\"{{id}}\"\n                                            data-done=\"{{done}}\">\n                                            <i class=\"bi bi-three-dots-vertical\"></i>\n                                        </button>\n                                </td>\n                            </tr>\n                            {{/payload}}\n                            {{^payload}}\n                            <tr>\n                                <td class=\"text-muted\" colspan=\"3\">Henüz Task yok</td>\n                            </tr>\n                            {{/payload}}\n                        </tbody>\n                    </table>\n                </div>\n                <!--  -->\n            </div>\n        </div>\n    </div>\n    <div class=\"modal fade\" id=\"staticBackdrop\" data-bs-backdrop=\"static\" data-bs-keyboard=\"false\" tabindex=\"-1\" aria-labelledby=\"staticBackdropLabel\" aria-hidden=\"true\">\n        <div class=\"modal-dialog modal-dialog-centered modal-dialog-scrollable\">\n            <div class=\"modal-content\">\n                <div class=\"modal-header\">\n                    <h1 class=\"modal-title fs-5\" id=\"staticBackdropLabel\">Update</h1>\n                    <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n                </div>\n                <div class=\"modal-body\">\n                    <div id=\"surveyContainer\"></div>\n                </div>\n            </div>\n        </div>\n    </div>\n    </div>\n\n    <!-- \n      THE TEMPLATE FOR THE POPOVER\n      This holds the HTML for the popover's content. It's invisible on the page\n      but the script below will use it.\n    -->\n    <template id=\"popover-template\">\n        <div class=\"btn-group\">\n            <form method=\"POST\" style=\"display: contents;\">\n                <!-- The script will put the correct item ID here -->\n                <input type=\"hidden\" name=\"id\" value=\"\" class=\"popover-id-input\" />\n\n                <!-- Group of buttons to show when the task is DONE -->\n                <div class=\"done-buttons\" style=\"display: contents;\">\n                    <button type=\"submit\" formaction=\"/operation/incomplete\" class=\"btn btn-outline-warning\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Mark As Incomplete\"><i class=\"bi bi-x-square\"></i></button>\n                </div>\n\n                <!-- Group of buttons to show when the task is NOT DONE -->\n                <div class=\"not-done-buttons\" style=\"display: contents;\">\n                    <button type=\"button\" formaction=\"\" class=\"btn btn-outline-primary btn-update\" name=\"id\" value=\"\" onclick=\"update_Task(this.value,this)\" data-bs-placement=\"top\" data-bs-title=\"Update\" data-bs-toggle=\"modal\" data-bs-target=\"#staticBackdrop\"><i class=\"bi bi-pencil\"></i></button>\n                    <button type=\"button\" formaction=\"\" class=\"btn btn-outline-secondary\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Set Reminder\"><i class=\"bi bi-bell\"></i></button>\n                    <button type=\"button\" formaction=\"\" class=\"btn btn-outline-info\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Delay\"><i class=\"bi bi-arrow-clockwise\"></i></button>\n                    <button type=\"submit\" formaction=\"/operation/complete\" class=\"btn btn-outline-success\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Complete Task\"><i class=\"bi bi-check2-square\"></i></button>\n                </div>\n\n                <!-- This button is always shown inside the popover -->\n                <button type=\"submit\" formaction=\"/operation/deleteTask\" class=\"btn btn-outline-danger\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Delete Task\"><i class=\"bi bi-trash3\"></i></button>\n            </form>\n        </div>\n    </template>\n\n    <!-- JS Libraries -->\n    <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js\"></script>\n\n    <script>\n        // remove popovers\n        \n            \n\n    </script>\n\n    <script>\n        // This script will run in the user's browser AFTER Node-RED has rendered the page.\n        document.addEventListener('DOMContentLoaded', () => {\n            \n            // Get the HTML template for the popover's content\n            const popoverTemplate = document.getElementById('popover-template');\n\n            // Find ALL the buttons that need a popover (which were created by Node-RED)\n            const popoverTriggerList = document.querySelectorAll('.options-popover-btn');\n\n            // Loop through each trigger button\n            popoverTriggerList.forEach(popoverTriggerEl => {\n                \n                // Get the unique data from the button's data-* attributes\n                const itemId = popoverTriggerEl.dataset.id;\n                const isDone = popoverTriggerEl.dataset.done === 'true';\n                console.log(itemId);\n                // Initialize the Bootstrap Popover for this specific button\n                const popover = new bootstrap.Popover(popoverTriggerEl, {\n                    html: true,\n                    title: 'Options',\n                    sanitize: false,\n                    trigger: 'click manual',\n                    // *** THE FIX IS HERE ***\n                    // Use a function for the content. This function runs EVERY TIME the popover is opened.\n                    content: function () {\n                        // B. Create a FRESH copy of the template's content\n                        const contentElement = popoverTemplate.content.cloneNode(true);\n                        \n                        // C. Modify the copied content\n                        contentElement.querySelector('.popover-id-input').value = itemId;\n                        let updatebtn = contentElement.querySelector('.btn-update');\n                        updatebtn.value = itemId;\n                        const tooltip = new bootstrap.Tooltip(updatebtn);\n\n\n                        // Show or hide the correct set of buttons based on the 'done' status\n                        if (isDone) {\n                            contentElement.querySelector('.not-done-buttons').remove();\n                        } else {\n                            contentElement.querySelector('.done-buttons').remove();\n                        }\n\n                        // D. Return the freshly prepared HTML element for Bootstrap to use\n                        return contentElement;\n                    }\n                });\n                \n\n                // E. Initialize nested tooltips after the popover is shown\n                popoverTriggerEl.addEventListener('shown.bs.popover', () => {\n                    const popoverId = popoverTriggerEl.getAttribute('aria-describedby');\n                    if (popoverId) {\n                        const popoverBody = document.getElementById(popoverId).querySelector('.popover-body');\n                        if (popoverBody) {\n                            const tooltipTriggersInPopover = popoverBody.querySelectorAll('[data-bs-toggle=\"tooltip\"]');\n                            [...tooltipTriggersInPopover].map(tooltipEl => new bootstrap.Tooltip(tooltipEl));\n                        }\n                    }\n                });\n            });\n\n            // Initialize any other tooltips on the page\n            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle=\"tooltip\"]');\n            [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));\n        });\n    </script>\n\n    <!-- updateHandler -->\n    <script>\n        \n        function update_Task(num,obj){\n            console.log(num);\n            const info = {\n                id : num\n            }\n            console.log(\"info object\");\n            console.log(info);\n            console.log(\"id\");\n            console.log(info.id);\n            const modalupdate = document.getElementById('staticBackdrop');\n            modalupdate.setAttribute('value', num);\n            document.querySelectorAll('.options-popover-btn').forEach(option_button =>{\n                if(option_button.getAttribute(\"aria-describedby\")){\n                    option_button.click();\n                }\n            });\n            // let popoverList = document.querySelectorAll(\".popover\");\n            // popoverList.forEach(popover =>{\n            //     popover.hide();\n            // });\n            let tooltipList = document.querySelectorAll(\".tooltip\");\n            tooltipList.forEach(tooltip =>{\n                tooltip.remove();\n            });\n            let object_in_q = taskDataPayload.find(task => task.id == num);\n            console.log(object_in_q);\n            console.log(object_in_q.name);\n            survey.setValue('task_id',num);\n            survey.setValue('new_task_id',num);\n            survey.setValue('new_task_name',object_in_q.name);\n            \n            \n        };\n        document.addEventListener('DOMContentLoaded', ()=>{\n            document.querySelector('.btn-close').addEventListener('click', ()=>{\n                close_task_update_window();\n            });\n            \n            function close_task_update_window(){\n                console.log(\"clapped\")\n                survey.clear();\n            };\n        });\n        \n    </script>\n\n    <!-- Dark Mode Light Mode -->\n    <script>\n        const themeToggleButton = document.getElementById('theme-toggle-btn');\n        const htmlElement = document.documentElement; // Gets the <html> element\n\n        // --- PART A: APPLY SAVED THEME ON PAGE LOAD ---\n\n        // This self-executing function applies the theme immediately.\n        (() => {\n            const savedTheme = localStorage.getItem('theme') || 'light';\n            themeToggleButton.innerHTML = savedTheme  === 'dark' ? '<i class=\"bi bi-moon-fill\"></i>' : '<i class=\"bi bi-brightness-high-fill\"></i>'\n            htmlElement.setAttribute('data-bs-theme', savedTheme);\n        })();\n\n\n        // --- PART B: HANDLE THE BUTTON CLICK ---\n        \n        themeToggleButton.addEventListener('click', () => {\n            // Check the current theme and toggle it\n            const currentTheme = htmlElement.getAttribute('data-bs-theme');\n            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';\n\n            // Set the new theme on the <html> element\n            htmlElement.setAttribute('data-bs-theme', newTheme);\n            if(newTheme ==='dark'){\n                themeToggleButton.innerHTML = '<i class=\"bi bi-moon-fill\"></i>';\n                themeToggleButton.classList.add('dark-hover');\n            }else{\n                themeToggleButton.classList.remove('dark-hover');\n                themeToggleButton.innerHTML = '<i class=\"bi bi-brightness-high-fill\"></i>'\n            }\n            \n            \n            // Save the new theme to localStorage\n            localStorage.setItem('theme', newTheme);\n        });\n    </script>\n    \n    <script>\n        const surveyJson = {\n            pages: [{\n                name: \"PersonalDetails\",\n                elements: [{\n                    \"name\": \"task_id\", // The name to access the data\n                    \"type\": \"text\", // Can be any input type\n                    \"visible\": false, // This is the key property to hide it\n                    \"defaultValue\": \"user-12345-abc\" // Optional: set a default value\n                    },{\n                    type: \"text\",\n                    name: \"new_task_id\",\n                    title: \"Enter New Task ID:\",\n                    \"validators\": [\n                        { \"type\": \"numeric\", \"text\": \"Value must be a number\" }\n                    ]},\n                    {\n                    type: \"text\",\n                    name: \"new_task_name\",\n                    title: \"New Task Name:\"\n                    }]\n            }]\n        };\n            \n        const survey = new Survey.Model(surveyJson);\n        survey.focusFirstQuestionAutomatic = false;\n\n        document.addEventListener(\"DOMContentLoaded\", function() {\n        survey.render(document.getElementById(\"surveyContainer\"));\n        });\n    </script>\n\n</body>\n\n</html>",
+        "output": "str",
+        "x": 480,
         "y": 120,
+        "wires": [
+            [
+                "6d306d8c46512ff1",
+                "487743e244d05892"
+            ]
+        ]
+    },
+    {
+        "id": "7e728c5fe9fd3323",
+        "type": "debug",
+        "z": "d30f86340f610285",
+        "name": "payload Passed",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 460,
+        "y": 60,
         "wires": []
     },
     {
@@ -403,9 +491,7 @@
         "x": 310,
         "y": 120,
         "wires": [
-            [
-                "0b7730b29503a68e"
-            ]
+            []
         ]
     },
     {
@@ -554,8 +640,8 @@
         "z": "16b5753bd4d1f0a0",
         "name": "Spared",
         "info": "",
-        "x": 90,
-        "y": 380,
+        "x": 150,
+        "y": 200,
         "wires": []
     },
     {
@@ -618,6 +704,23 @@
         "x": 640,
         "y": 380,
         "wires": []
+    },
+    {
+        "id": "5c554c21ea0acfb3",
+        "type": "template",
+        "z": "16b5753bd4d1f0a0",
+        "name": "LastWorking",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "html",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html lang=\"tr\">\n\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>To-Do List</title>\n    <link rel=\"icon\" type=\"image/x-icon\" href=\"./img/pokeball.png\">\n    <link rel=\"stylesheet\" href=\"/css/bootstrap.min.css\">\n    <link rel=\"stylesheet\" href=\"/fonts/bootstrap-icons.min.css\">\n    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js\"></script>\n    <!-- <script src=\"https://unpkg.com/mustache@latest\"></script> -->\n    <script src=\"/js/mustache.min.js\"></script>\n    <style>\n        #inputGroup-sizing-lg:hover {\n            background-color: burlywood;\n            transition: box-shadow 0.3s ease;\n            cursor: pointer;\n            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.4);\n        }\n\n        ;\n\n        .btn.btn-primary:focus {\n            transition: box-shadow 0.3s ease;\n            border-color: #86b7fe;\n            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);\n            border-radius: 3px;\n        }\n    </style>\n    <script>\n        function createTask(params) {\n            \n        }\n        function handleCheck(chkbx, lbl) {\n            const temp_chkbx = document.getElementById(chkbx);\n            if (temp_chkbx.checked) {\n                lbl.textContent = \"☑\";\n            }\n            else{\n                lbl.textContent = \"☐\";\n            }\n        }\n    </script>\n</head>\n\n<body>\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\"col-md-8 offset-md-2\">\n                {{#error}}\n                <div class=\"alert alert-danger mt-5\">\n                    <h4>{{message}}</h4>\n                </div>\n                {{/error}}\n                <!-- {{#message}}<p class=\"text text-danger\">{{.}}</p>{{/message}} -->\n                <form action=\"/operation/add\" method=\"POST\">\n                    <div class=\"input-group input-group-lg mt-5\">\n                        <input required type=\"text\" name=\"name\" class=\"form-control {{#error}} border-danger {{/error}}\" placeholder=\"Big Man Charizard\"/>\n                        <button class=\"btn btn-primary\" type=\"reset\" style=\"padding-left: 10px; padding-right: 10px; background-color: white;color: black;\">Temizle</button>\n                        <button class=\"btn btn-primary\" type=\"submit\" style=\"padding-left: 30px; padding-right: 30px;\">Ekle</button>\n                    </div>\n                </form>\n                <div class=\"table-responsive mt-5 border\">\n                    <table class=\"table table-striped table-hover border mb-0 \">\n                        <thead>\n                            <tr>\n                                <th>Task</th>\n                                <th>Details... Details</th>\n                                <th style=\"text-align: center;\">Actions</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            {{#payload}}\n                                <tr>\n                                    <td class=\"{{#done}}text-decoration-line-through{{/done}}\">{{name}}</td>\n                                    <td><span class=\"badge bg-secondary\"><i class=\"bi bi-calendar2-week\"></i> {{date}},{{time}}</span></td>\n                                    <td align=\"right\">\n                                        \n                                        <div class=\"btn-group text-right\">\n                                            <form method=\"POST\">\n                                                <input type=\"hidden\" name=\"id\" value=\"{{id}}\"  />\n                                            {{#done}}\n                                                <button data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Mark As Incomplete\" type=\"submit\" formaction=\"/operation/incomplete\" class=\"btn btn-outline-warning\"><i class=\"bi bi-x-square\"></i></button>\n                                            {{/done}}\n                                            {{^done}}\n                                                <button data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Update\" formaction=\"/comingsoon\" onclick=\"alert('coming soon')\" class=\"btn btn-outline-primary\"><i class=\"bi bi-pencil\"></i></button>\n                                                <button data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Set Reminder\" formaction=\"/comingsoon\" onclick=\"alert('coming soon')\" class=\"btn btn-outline-secondary\"><i class=\"bi bi-bell\"></i></button>\n                                                <button data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Delay\" formaction=\"/comingsoon\" onclick=\"alert('coming soon')\" class=\"btn btn-outline-info\"><i class=\"bi bi-arrow-clockwise\"></i></button>\n                                                <button data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Complete Task\" type=\"submit\" formaction=\"/operation/complete\" class=\"btn btn-outline-success\"><i class=\"bi bi-check2-square\"></i></button>\n                                            {{/done}}\n                                            <button class=\"btn btn-custom\" button type=\"button\" id=\"options-popover-btn\"><i class=\"bi bi-three-dots-vertical\"></i></div>\n                                            <button data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-title=\"Delete Task\" type=\"submit\" formaction=\"/operation/deleteTask\" class=\"btn btn-outline-danger\"><i class=\"bi bi-trash3\"></i></button>\n                                            </form>\n                                        </div>\n                                    </td>\n                                </tr>\n                            {{/payload}}\n                            {{^payload}}\n                                <tr>\n                                    <td class=\"text-muted\" colspan=\"3\">Henüz Task yok</td>\n                                </tr>\n                            {{/payload}}\n                        </tbody>\n                    </table>\n                </div>\n                <p class=\"fst-italic fs-4\">Mükemmeli yakalamaya çalışırken iyiden olmayalım. Bu sözü belki de ben uydurdum. <br>  -Levent Sencer Şahin</p>\n                <p id=\"thisone\"></p>\n                \n            </div>\n        </div>\n    </div>\n    <script src=\"/js/bootstrap.bundle.min.js\"></script>\n    <script>\n        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle=\"tooltip\"]')\n        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))    \n    </script>\n    \n    <script>\n        let deneme = document.getElementById(\"thisone\");\n        let yeniden = new Date();\n        deneme.innerHTML = yeniden.toLocaleDateString()+ \"<br>\" + \"<span id='clock'></span>\";\n        const clock = document.getElementById(\"clock\");\n        const interval = setInterval(function(){\n            const now = new Date();\n        clock.innerHTML = now.toLocaleTimeString();\n        },100);\n\n\n    </script>\n    <script>\n        //Script for advanced popover menu\n            const optionsBtn = document.getElementById('options-popover-btn');\n    \n            const popoverContent = `\n            \n            <div class=\"btn-group text-right\">\n                    <input type=\"hidden\" name=\"id\" value=\"{{id}}\"  />\n                {{#done}}\n                    <button data-bs-toggle=\"tooltip\" data-bs-placement=\"right\" data-bs-title=\"Mark As Incomplete\" type=\"submit\" formaction=\"/operation/incomplete\" class=\"btn btn-outline-warning\"><i class=\"bi bi-x-square\"></i></button>\n                {{/done}}\n                {{^done}}\n                    <button data-bs-toggle=\"tooltip\" data-bs-placement=\"right\" data-bs-title=\"Update\" formaction=\"/comingsoon\" onclick=\"alert('coming soon')\" class=\"btn btn-outline-primary\"><i class=\"bi bi-pencil\"></i></button>\n                    <button data-bs-toggle=\"tooltip\" data-bs-placement=\"right\" data-bs-title=\"Set Reminder\" formaction=\"/comingsoon\" onclick=\"alert('coming soon')\" class=\"btn btn-outline-secondary\"><i class=\"bi bi-bell\"></i></button>\n                    <button data-bs-toggle=\"tooltip\" data-bs-placement=\"right\" data-bs-title=\"Delay\" formaction=\"/comingsoon\" onclick=\"alert('coming soon')\" class=\"btn btn-outline-info\"><i class=\"bi bi-arrow-clockwise\"></i></button>\n                    <button data-bs-toggle=\"tooltip\" data-bs-placement=\"right\" data-bs-title=\"Complete Task\" type=\"submit\" formaction=\"/operation/complete\" class=\"btn btn-outline-success\"><i class=\"bi bi-check2-square\"></i></button>\n                {{/done}}\n                    <button data-bs-toggle=\"tooltip\" data-bs-placement=\"right\" data-bs-title=\"Delete Task\" type=\"submit\" formaction=\"/operation/deleteTask\" class=\"btn btn-outline-danger\"><i class=\"bi bi-trash3\"></i></button>\n            </div>\n            \n            `;\n    \n            const popover = new bootstrap.Popover(optionsBtn, {\n            html: true, // Required to allow HTML in the content\n            title: 'Options',\n            content: popoverContent,\n            sanitize: false, // Required to allow buttons and other complex HTML\n            });\n            optionsBtn.addEventListener('shown.bs.popover', () => {\n            console.log('Popover shown, initializing nested tooltips...');\n            \n            // Find the popover body that was just created by Bootstrap\n            const popoverBody = document.querySelector('.popover-body');\n            \n            if (popoverBody) {\n            // Find all tooltip triggers *inside* that new popover body\n            const tooltipTriggersInPopover = popoverBody.querySelectorAll('[data-bs-toggle=\"tooltip\"]');\n            \n            // Initialize a new Bootstrap Tooltip for each one\n            [...tooltipTriggersInPopover].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));\n            \n            console.log(`Initialized ${tooltipTriggersInPopover.length} nested tooltips.`);\n            }\n            });\n    \n    </script>\n</body>\n\n</html>\n\n<!--\nButton 110 {\n\twidth: 83px;\n\theight: 38px;\n\tpadding: 0px 10px;\n\tbackground: #0178FD;\n\tborder: 1px solid #0178FD;\n\tborder-radius: 4px;\n\tcolor: #FFFFFF;\n\tfont-family: \"Helvetica\";\n\tfont-weight: 400;\n\tfont-size: 16px;\n\ttext-align: center;\n}\n-->",
+        "output": "str",
+        "x": 210,
+        "y": 720,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "8d894d13d7c5ebd4",
@@ -1078,6 +1181,581 @@
         "statusType": "auto",
         "x": 300,
         "y": 60,
+        "wires": []
+    },
+    {
+        "id": "f6eee42979577bd1",
+        "type": "http in",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "deleteTask",
+        "url": "/deleteTask",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 700,
+        "wires": [
+            [
+                "f9e390d75f519b8b"
+            ]
+        ]
+    },
+    {
+        "id": "923f85e557a7adcf",
+        "type": "function",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "db.todo.delete()",
+        "func": "const DB = global.get(\"DB\")\nlet todo = DB.todo\n\nconst index = todo.findIndex(x => x.id == msg.payload.id)\n\nif(!~index){\n    msg.error={\n        message:\"No matching task found with the ID.\"\n    }\n    return [null,msg]\n}\n\ntodo.splice(index,1)\n\nDB.todo = todo\n\nglobal.set(\"DB\",DB)\n\n/**\n * ToDo DB Şema\n * id :num\n * name :\"\"\n * done:true|false\n * stamp: {\n    *  CreatedAt: sometime,\n    *  ip: IP,\n    *  user:\"\",\n    *  email: \"\",\n * \n * }\n*/\nreturn msg;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 680,
+        "wires": [
+            [
+                "c6eb080e57c76c71"
+            ],
+            [
+                "e9612ac162761d79"
+            ]
+        ],
+        "outputLabels": [
+            "Success",
+            "Error"
+        ]
+    },
+    {
+        "id": "c6eb080e57c76c71",
+        "type": "http response",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "",
+        "statusCode": "302",
+        "headers": {
+            "location": "/"
+        },
+        "x": 640,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "f9e390d75f519b8b",
+        "type": "function",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "validation",
+        "func": "if(!msg.payload.id){\n    msg.error = {\n        message:\"The task you wanted to delete must have an ID.\"\n    }\n    return [null, msg]\n}\nreturn msg;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 700,
+        "wires": [
+            [
+                "923f85e557a7adcf"
+            ],
+            [
+                "5a9e7156ac61d720"
+            ]
+        ],
+        "outputLabels": [
+            "Valid",
+            "Invalid"
+        ]
+    },
+    {
+        "id": "e9612ac162761d79",
+        "type": "link out",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "link out 2",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 595,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "5a9e7156ac61d720",
+        "type": "link out",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "link out 3",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 385,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "fb32b1ff301f68ab",
+        "type": "http in",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "complete",
+        "url": "/complete",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 840,
+        "wires": [
+            [
+                "b3f677ea3a0d7436"
+            ]
+        ]
+    },
+    {
+        "id": "b3f677ea3a0d7436",
+        "type": "function",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "validation",
+        "func": "if(!msg.payload.id){\n    msg.error = {\n        message:\"The task you wanted to complete must have an ID.\"\n    }\n    return [null, msg]\n}\nreturn msg;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 840,
+        "wires": [
+            [
+                "4ec6ca83e5b5a8ce"
+            ],
+            [
+                "42535bcf00b6ca99"
+            ]
+        ],
+        "outputLabels": [
+            "Valid",
+            "Invalid"
+        ]
+    },
+    {
+        "id": "4ec6ca83e5b5a8ce",
+        "type": "function",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "db.todo.complete()",
+        "func": "const DB = global.get(\"DB\")\nlet todo = DB.todo\n\nconst index = todo.findIndex(x => x.id == msg.payload.id)\n\nif(!~index){\n    msg.error={\n        message:\"No matching task found with the ID.\"\n    }\n    return [null,msg]\n}\n\ntodo[index].done=true;\n\nDB.todo = todo\n\nglobal.set(\"DB\",DB)\n\n/**\n * ToDo DB Şema\n * id :num\n * name :\"\"\n * done:true|false\n * stamp: {\n    *  CreatedAt: sometime,\n    *  ip: IP,\n    *  user:\"\",\n    *  email: \"\",\n * \n * }\n*/\nreturn msg;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 800,
+        "wires": [
+            [
+                "93461b90535f8913"
+            ],
+            [
+                "adaa3a2c6da233fc"
+            ]
+        ],
+        "outputLabels": [
+            "Success",
+            "Error"
+        ]
+    },
+    {
+        "id": "93461b90535f8913",
+        "type": "http response",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "",
+        "statusCode": "302",
+        "headers": {
+            "location": "/"
+        },
+        "x": 680,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "adaa3a2c6da233fc",
+        "type": "link out",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "link out 9",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 595,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "42535bcf00b6ca99",
+        "type": "link out",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "link out 10",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 385,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "1ddb69c0773e03ca",
+        "type": "http in",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "incomplete",
+        "url": "/incomplete",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 980,
+        "wires": [
+            [
+                "5b40da4a31813528"
+            ]
+        ]
+    },
+    {
+        "id": "5b40da4a31813528",
+        "type": "function",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "validation",
+        "func": "if(!msg.payload.id){\n    msg.error = {\n        message:\"The task you wanted to complete must have an ID.\"\n    }\n    return [null, msg]\n}\nreturn msg;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 980,
+        "wires": [
+            [
+                "ff07fdfbeb9f31bc"
+            ],
+            [
+                "091d45602778ce5e"
+            ]
+        ],
+        "outputLabels": [
+            "Valid",
+            "Invalid"
+        ]
+    },
+    {
+        "id": "ff07fdfbeb9f31bc",
+        "type": "function",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "db.todo.complete()",
+        "func": "const DB = global.get(\"DB\")\nlet todo = DB.todo\n\nconst index = todo.findIndex(x => x.id == msg.payload.id)\n\nif(!~index){\n    msg.error={\n        message:\"No matching task found with the ID.\"\n    }\n    return [null,msg]\n}\n\ntodo[index].done=false;\n\nDB.todo = todo\n\nglobal.set(\"DB\",DB)\n\n/**\n * ToDo DB Şema\n * id :num\n * name :\"\"\n * done:true|false\n * stamp: {\n    *  CreatedAt: sometime,\n    *  ip: IP,\n    *  user:\"\",\n    *  email: \"\",\n * \n * }\n*/\nreturn msg;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 940,
+        "wires": [
+            [
+                "eb3bd1455679f58a"
+            ],
+            [
+                "36fab97027d40c64"
+            ]
+        ],
+        "outputLabels": [
+            "Success",
+            "Error"
+        ]
+    },
+    {
+        "id": "eb3bd1455679f58a",
+        "type": "http response",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "",
+        "statusCode": "302",
+        "headers": {
+            "location": "/"
+        },
+        "x": 680,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "36fab97027d40c64",
+        "type": "link out",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "link out 11",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 595,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "091d45602778ce5e",
+        "type": "link out",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "link out 12",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 385,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "6319c995a0919296",
+        "type": "comment",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "Deprecated",
+        "info": "",
+        "x": 130,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "36ee2ee5e3d8865a",
+        "type": "http in",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "operation",
+        "url": "/operationasdf/:type",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 1200,
+        "wires": [
+            [
+                "47d8290138bbb8ed"
+            ]
+        ]
+    },
+    {
+        "id": "47d8290138bbb8ed",
+        "type": "function",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "validation",
+        "func": "const typeLookup={\n    deleteTask : \"delete\",\n    complete: \"complete\",\n    incomplete : \"incomplete\",\n    add: \"add\"\n}\n\nif(!Object.keys(typeLookup).includes(msg.req.params.type)){\n    msg.error = {\n        message: `Request Type Error: ${msg.req.params.type}. \\n Unsupported request type. `\n    }\n    return [null,msg]\n}\n\nif(msg.req.params.type == \"add\"){\n    if (!msg.payload.name) {\n        node.error(\"You cannot add a nameless task.\", msg);\n        return;\n    }\n    const now = new Date().getTime();\n    msg.payload.id = now; \n}\n\nif(!msg.payload.id){\n    msg.error = {\n        message: `The task you wanted to ${typeLookup[msg.req.params.type]} must have an ID.`\n    }\n    return [null, msg]\n}\nreturn msg;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 1200,
+        "wires": [
+            [
+                "feb06891a3283162"
+            ],
+            [
+                "f0a1fb809bc146a2"
+            ]
+        ],
+        "outputLabels": [
+            "Valid",
+            "Invalid"
+        ]
+    },
+    {
+        "id": "feb06891a3283162",
+        "type": "function",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "db.todo.handler()",
+        "func": "const DB = global.get(\"DB\")\nlet todo = DB.todo\n\nconst index = todo.findIndex(x => x.id == msg.payload.id)\n\nif(!~index){\n    msg.error={\n        message:\"No matching task found with the ID.\"\n    }\n    return [null,msg]\n}\n\nswitch (msg.req.params.type) {\n    case \"add\":\n        todo.push({\n            id: msg.payload.id,\n            name: msg.payload.name,\n            done: false,\n            stamp: {\n                CreatedAt: msg.payload.id,\n                ip: msg.req.ip,\n                username: \"\",\n                email: \"\",\n            }\n        })\n        break;\n    case \"deleteTask\":\n        todo.splice(index,1)\n        break;\n    case \"complete\":\n        todo[index].done=true;\n        break;\n    case \"incomplete\":\n        todo[index].done=false;\n        break;\n    default:\n        \n}\n\n\n\nDB.todo = todo\n\nglobal.set(\"DB\",DB)\n\n/**\n * ToDo DB Şema\n * id :num\n * name :\"\"\n * done:true|false\n * stamp: {\n    *  CreatedAt: sometime,\n    *  ip: IP,\n    *  user:\"\",\n    *  email: \"\",\n * \n * }\n*/\nreturn msg;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 1160,
+        "wires": [
+            [
+                "27414ddd96659cc5"
+            ],
+            [
+                "2dd20b4d491506a2"
+            ]
+        ],
+        "outputLabels": [
+            "Success",
+            "Error"
+        ]
+    },
+    {
+        "id": "27414ddd96659cc5",
+        "type": "http response",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "",
+        "statusCode": "302",
+        "headers": {
+            "location": "/"
+        },
+        "x": 680,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "2dd20b4d491506a2",
+        "type": "link out",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "link out 15",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 595,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "f0a1fb809bc146a2",
+        "type": "link out",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "link out 16",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 385,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "49b070ec7b4905d6",
+        "type": "http in",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "add",
+        "url": "/add",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 90,
+        "y": 1320,
+        "wires": [
+            [
+                "b477b2bcf037fc13"
+            ]
+        ]
+    },
+    {
+        "id": "13c8d762c253c09e",
+        "type": "http response",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "",
+        "statusCode": "302",
+        "headers": {
+            "location": "/"
+        },
+        "x": 620,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "9738fbf514136ba6",
+        "type": "function",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "db.todo.insert()",
+        "func": "const DB = global.get(\"DB\")\nlet todo = DB.todo\n\nconst now = new Date().getTime();\ntodo.push({\n    id: now,\n    name:msg.payload.name,\n    done:false,\n    stamp:{\n        CreatedAt:now,\n        ip:msg.req.ip,\n        username:\"\",\n        email:\"\",\n    }\n})\nDB.todo = todo\nglobal.set(\"DB\",DB)\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 1320,
+        "wires": [
+            [
+                "13c8d762c253c09e"
+            ]
+        ]
+    },
+    {
+        "id": "b477b2bcf037fc13",
+        "type": "function",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "validation",
+        "func": "if(!msg.payload.name){\n    node.error(\"You cannot add a nameless task.\", msg);\n    return;\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 1320,
+        "wires": [
+            [
+                "9738fbf514136ba6"
+            ]
+        ]
+    },
+    {
+        "id": "eab5ee6ebd13aec8",
+        "type": "catch",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "",
+        "scope": [
+            "b477b2bcf037fc13"
+        ],
+        "uncaught": false,
+        "x": 270,
+        "y": 1380,
+        "wires": [
+            [
+                "863b0a0285ecdc3c"
+            ]
+        ]
+    },
+    {
+        "id": "863b0a0285ecdc3c",
+        "type": "link out",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "6174979e5eaf9458"
+        ],
+        "x": 425,
+        "y": 1380,
+        "wires": []
+    },
+    {
+        "id": "9a7c8b17c2318011",
+        "type": "comment",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "Deprecated",
+        "info": "",
+        "x": 110,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "c0d2fa8e55a2e5bc",
+        "type": "comment",
+        "z": "8cb1c5cd55e7b8a6",
+        "name": "Deprecated",
+        "info": "",
+        "x": 110,
+        "y": 1260,
         "wires": []
     }
 ]
